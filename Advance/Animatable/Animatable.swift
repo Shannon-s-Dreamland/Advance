@@ -134,6 +134,14 @@ public final class Animatable<Value: VectorConvertible> {
             self.currentValue = a.value
         })
         
+        animator?.paused.observe({ [unowned self] (a) -> Void in
+            self.currentValue = a.value
+        })
+        
+        animator?.resumed.observe({ [unowned self] (a) -> Void in
+            self.currentValue = a.value
+        })
+        
         animator?.cancelled.observe({ [unowned self] (a) -> Void in
             self.animator = nil
             completion?(finished: false)
@@ -145,8 +153,18 @@ public final class Animatable<Value: VectorConvertible> {
         })
     }
     
-    /// Cancels an in-flight animation, if present.
+    /// Pause an in-flight animation, if present.
     public func cancelAnimation() {
         animator?.cancel()
+    }
+    
+    /// Pause an in-flight animation, if present.
+    public func puaseAnimation() {
+        animator?.pause()
+    }
+    
+    /// Resume an paused animation, if present.
+    public func resumeAnimation() {
+        animator?.resume()
     }
 }
