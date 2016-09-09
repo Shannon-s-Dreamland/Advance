@@ -92,7 +92,7 @@ public final class Spring<T: VectorConvertible> {
     }
     
     /// Removes any current velocity and snaps the spring directly to the given value.
-    public func reset(value: T) {
+    public func reset(_ value: T) {
         var f = solver.function
         f.target = value.vector
         solver = DynamicSolver(function: f, value: value.vector)

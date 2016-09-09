@@ -66,13 +66,13 @@ final class GestureView: UIView {
         }
     }
     
-    private dynamic func manipulate(recognizer: DirectManipulationGestureRecognizer) {
+    private dynamic func manipulate(_ recognizer: DirectManipulationGestureRecognizer) {
         switch recognizer.state {
-        case .Began:
+        case .began:
             
             // Take the anchor point into consideration
-            let gestureLocation = recognizer.locationInView(self)
-            let newCenter = superview!.convertPoint(gestureLocation, fromView: self)
+            let gestureLocation = recognizer.location(in: self)
+            let newCenter = superview!.convert(gestureLocation, from: self)
             animatableCenter.value = newCenter
             
             var anchorPoint = gestureLocation
@@ -85,7 +85,7 @@ final class GestureView: UIView {
             centerWhenGestureBegan = animatableCenter.value
             transformWhenGestureBegan = animatableTransform.value
             break
-        case .Changed:
+        case .changed:
             var t = transformWhenGestureBegan
             t.rotation += recognizer.rotation
             t.scale *= recognizer.scale
@@ -97,10 +97,10 @@ final class GestureView: UIView {
             animatableCenter.value = center
             
             break
-        case .Ended, .Cancelled:
+        case .ended, .cancelled:
             // Reset the anchor point
             let mid = CGPoint(x: bounds.midX, y: bounds.midY)
-            let newCenter = superview!.convertPoint(mid, fromView: self)
+            let newCenter = superview!.convert(mid, from: self)
             animatableCenter.value = newCenter
             layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             

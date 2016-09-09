@@ -26,6 +26,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+import Foundation
+
 /// Creates and manages `Animator` instances, retaining them until completion.
 public final class AnimatorContext {
     
@@ -47,14 +49,14 @@ public final class AnimatorContext {
     ///
     /// - parameter animation: The animation to run.
     /// - returns: The newly generated `Animator` instance.
-    public func animate<A: AnimationType>(animation: A) -> Animator<A> {
+    public func animate<A: AnimationType>(_ animation: A) -> Animator<A> {
         let a = Animator(animation: animation)
         a.start()
-        if a.state == .Running {
+        if a.state == .running {
             let wrapper = AnimatorWrapper(animator: a)
             animators.insert(wrapper)
             let obs: (A)->Void = { [weak self] (a) -> Void in
-                self?.animators.remove(wrapper)
+                _ = self?.animators.remove(wrapper)
             }
             a.cancelled.observe(obs)
             a.finished.observe(obs)
@@ -70,13 +72,15 @@ private protocol AnimatorType: class {
 extension Animator: AnimatorType {}
 
 private struct AnimatorWrapper: Hashable {
-    let animator: AnimatorType
+    var animator: AnimatorType
+    let uuid: NSUUID
     init<A: AnimationType>(animator: Animator<A>) {
         self.animator = animator
+        uuid = NSUUID()
     }
     
     var hashValue: Int {
-        return unsafeAddressOf(animator).hashValue
+        return uuid.hashValue
     }
 }
 

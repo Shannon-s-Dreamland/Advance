@@ -29,28 +29,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /// The state of an `Animator` instance.
 public enum AnimatorState: Equatable {
     /// The animator has not yet started.
-    case Pending
+    case pending
   
     /// The animator is paused
-    case Paused
+    case paused
     
     /// The animator is currently running.
-    case Running
+    case running
     
     /// The animator has stopped running.
-    case Completed(AnimatorResult)
+    case completed(AnimatorResult)
 }
 
 /// Equatable.
 public func ==(lhs: AnimatorState, rhs: AnimatorState) -> Bool {
     switch (lhs, rhs) {
-    case (.Pending, .Pending):
+    case (.pending, .pending):
         return true
-    case (.Running, .Running):
+    case (.running, .running):
         return true
-    case (.Paused, .Paused):
+    case (.paused, .paused):
         return true
-    case (.Completed(let l), .Completed(let r)):
+    case (.completed(let l), .completed(let r)):
         return l == r
     default:
         return false
@@ -60,10 +60,10 @@ public func ==(lhs: AnimatorState, rhs: AnimatorState) -> Bool {
 /// The possible result cases of an animator.
 public enum AnimatorResult {
     /// The animator was cancelled before the animation completed.
-    case Cancelled
+    case cancelled
     
     /// The animator successfully ran the animation until it was finished.
-    case Finished
+    case finished
 }
 
 /// Runs an animation until the animations finishes, or until `cancel()` 
@@ -97,7 +97,7 @@ public final class Animator<A: AnimationType> {
         let s = Loop.shared.subscribe()
         
         s.advanced.observe({ [unowned self] (elapsed) -> Void in
-            guard self.state == .Running else { return }
+            guard self.state == .running else { return }
             self.animation.advance(elapsed)
             self.changed.fire(self.animation)
             if self.animation.finished == true {
@@ -111,34 +111,34 @@ public final class Animator<A: AnimationType> {
     /// The current state of the animator. Animators begin in a running state,
     /// and they are guarenteed to transition into either the cancelled or
     /// finished state exactly one time – no further state changes are allowed.
-    private (set) public var state: AnimatorState = .Pending {
+    private (set) public var state: AnimatorState = .pending {
         willSet {
             guard newValue != state else { return }
             switch newValue {
-            case .Pending:
+            case .pending:
                 assert(false, "Invalid state transition")
-            case  .Paused:
-                assert(state == .Running, "Invalid state transition")
-            case .Running:
-                assert(state == .Pending || state == .Paused, "Invalid state transition")
-            case .Completed(_):
-                assert(state == .Pending || state == .Paused || state == .Running, "Invalid state transition")
+            case  .paused:
+                assert(state == .running, "Invalid state transition")
+            case .running:
+                assert(state == .pending || state == .paused, "Invalid state transition")
+            case .completed(_):
+                assert(state == .pending || state == .paused || state == .running, "Invalid state transition")
             }
         }
         didSet {
             guard oldValue != state else { return }
             switch state {
-            case .Pending:
+            case .pending:
                  break
-            case .Paused:
+            case .paused:
                 paused.fire(animation)
-            case .Running:
+            case .running:
                 started.close(animation)
-            case .Completed(let result):
+            case .completed(let result):
                 switch result {
-                case .Cancelled:
+                case .cancelled:
                     cancelled.close(animation)
-                case .Finished:
+                case .finished:
                     finished.close(animation)
                 }
             }
@@ -174,7 +174,7 @@ public final class Animator<A: AnimationType> {
     }
     
     deinit {
-        if state == .Running || state == .Pending || state == .Paused {
+        if state == .running || state == .pending || state == .paused {
             cancel()
         }
     }
@@ -184,8 +184,8 @@ public final class Animator<A: AnimationType> {
     /// If the animator is not in a `pending` state, calling start() will have
     /// no effect.
     public func start() {
-        guard state == .Pending else { return }
-        state = .Running
+        guard state == .pending else { return }
+        state = .running
         if animation.finished == true {
             finish()
         } else {
@@ -198,8 +198,8 @@ public final class Animator<A: AnimationType> {
     /// If the animator is not in a `running` state, calling pause() will have
     /// no effect.
     public func pause() {
-        guard state == .Running else { return }
-        state = .Paused
+        guard state == .running else { return }
+        state = .paused
         if animation.finished == true {
             finish()
         } else {
@@ -212,8 +212,8 @@ public final class Animator<A: AnimationType> {
     /// If the animator is not in a `paused` state, calling resume() will have
     /// no effect.
     public func resume() {
-        guard state == .Paused else { return }
-        state = .Running
+        guard state == .paused else { return }
+        state = .running
         if animation.finished == true {
             finish()
         } else {
@@ -228,14 +228,14 @@ public final class Animator<A: AnimationType> {
     /// If the animator is already cancelled or finished, calling `cancel()` will 
     /// have no effect.
     public func cancel() {
-        guard state == .Running || state == .Pending || state == .Paused else { return }
-        state = .Completed(.Cancelled)
+        guard state == .running || state == .pending || state == .paused else { return }
+        state = .completed(.cancelled)
         subscription = nil
     }
     
     private func finish() {
-        assert(state == .Running || state == .Pending || state == .Paused)
-        state = .Completed(.Finished)
+        assert(state == .running || state == .pending || state == .paused)
+        state = .completed(.finished)
         subscription = nil
     }
 }

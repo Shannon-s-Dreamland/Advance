@@ -50,11 +50,11 @@ class SpringsViewController: DemoViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         
         view.addGestureRecognizer(tapRecognizer)
         tapRecognizer.addTarget(self, action: #selector(tap(_:)))
-        tapRecognizer.enabled = false
+        tapRecognizer.isEnabled = false
         
         springView.bounds = CGRect(x: 0.0, y: 0.0, width: 24.0, height: 24.0)
         
@@ -76,12 +76,12 @@ class SpringsViewController: DemoViewController {
         configView.frame = configFrame
     }
     
-    dynamic func tap(recognizer: UITapGestureRecognizer) {
-        let point = recognizer.locationInView(view)
+    dynamic func tap(_ recognizer: UITapGestureRecognizer) {
+        let point = recognizer.location(in: view)
         springView.centerSpring.target = point
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         springView.centerSpring.reset(CGPoint(x: view.bounds.midX, y: view.bounds.midY))
     }
@@ -94,20 +94,20 @@ class SpringsViewController: DemoViewController {
     override func didEnterFullScreen() {
         super.didEnterFullScreen()
         configView.alpha = 1.0
-        tapRecognizer.enabled = true
+        tapRecognizer.isEnabled = true
     }
     
     override func didLeaveFullScreen() {
         super.didLeaveFullScreen()
         configView.alpha = 0.0
         springView.centerSpring.target = CGPoint(x: contentView.bounds.midX, y: contentView.bounds.midY)
-        tapRecognizer.enabled = false
+        tapRecognizer.isEnabled = false
     }
 }
 
 
 extension SpringsViewController: SpringConfigurationViewDelegate {
-    func springConfigurationViewDidChange(view: SpringConfigurationView) {
+    func springConfigurationViewDidChange(_ view: SpringConfigurationView) {
         updateSprings()
     }
 }

@@ -30,7 +30,7 @@ import Foundation
 import UIKit
 
 protocol SpringConfigurationViewDelegate: class {
-    func springConfigurationViewDidChange(view: SpringConfigurationView)
+    func springConfigurationViewDidChange(_ view: SpringConfigurationView)
 }
 
 
@@ -56,8 +56,8 @@ class SpringConfigurationView: UIView {
         addSubview(tensionSlider)
         addSubview(dampingSlider)
         
-        tensionSlider.slider.addTarget(self, action: #selector(changed), forControlEvents: .ValueChanged)
-        dampingSlider.slider.addTarget(self, action: #selector(changed), forControlEvents: .ValueChanged)
+        tensionSlider.slider.addTarget(self, action: #selector(changed), for: .valueChanged)
+        dampingSlider.slider.addTarget(self, action: #selector(changed), for: .valueChanged)
         
         tensionSlider.slider.minimumValue = 1.0
         tensionSlider.slider.maximumValue = 400.0
@@ -76,7 +76,7 @@ class SpringConfigurationView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func sizeThatFits(size: CGSize) -> CGSize {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
         var s = CGSize.zero
         s.width = size.width
         s.height += tensionSlider.sizeThatFits(size).height
@@ -132,7 +132,7 @@ private class LabeledSliderView: UIView {
         slider.minimumTrackTintColor = UIColor(red: 0.0, green: 196.0/255.0, blue: 1.0, alpha: 1.0)
         
         label.text = "Untitled"
-        label.textColor = UIColor.darkGrayColor()
+        label.textColor = UIColor.darkGray
         
         addSubview(label)
         addSubview(slider)
@@ -142,7 +142,7 @@ private class LabeledSliderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private override func sizeThatFits(size: CGSize) -> CGSize {
+    private override func sizeThatFits(_ size: CGSize) -> CGSize {
         var s = size
         s.height = 44.0
         return s

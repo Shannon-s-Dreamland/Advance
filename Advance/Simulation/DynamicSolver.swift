@@ -102,7 +102,7 @@ public struct DynamicSolver<F: DynamicFunctionType> : Advanceable {
     ///
     /// - parameter elapsed: The duration by which to advance the simulation
     ///   in seconds.
-    public mutating func advance(elapsed: Double) {
+    public mutating func advance(_ elapsed: Double) {
         guard settled == false else { return }
         
         // Limit to 10 physics ticks per update, should never come close.
@@ -170,7 +170,7 @@ public struct DynamicSolver<F: DynamicFunctionType> : Advanceable {
     }
 }
 
-private struct DynamicSolverState<Vector: VectorType> {
+public struct DynamicSolverState<Vector: VectorType> {
     var value: Vector
     var velocity: Vector
     init(value: Vector, velocity: Vector) {
@@ -183,7 +183,7 @@ private extension DynamicSolverState {
     typealias Derivative = DynamicSolverState<Vector>
     
     /// RK4 Integration.
-    func integrate<F: DynamicFunctionType where F.Vector == Vector>(function: F, time: Double) -> DynamicSolverState<Vector> {
+    func integrate<F: DynamicFunctionType>(_ function: F, time: Double) -> DynamicSolverState<Vector> where F.Vector == Vector {
         let initial = Derivative(value:Vector.zero, velocity: Vector.zero)
         
         let a = evaluate(function, time: 0.0, derivative: initial)
@@ -206,7 +206,7 @@ private extension DynamicSolverState {
         return DynamicSolverState(value: val, velocity: vel)
     }
     
-    private func evaluate<F: DynamicFunctionType where F.Vector == Vector>(function: F, time: Double, derivative: Derivative) -> Derivative {
+    func evaluate<F: DynamicFunctionType>(_ function: F, time: Double, derivative: Derivative) -> Derivative where F.Vector == Vector {
         let val = value + Scalar(time) * derivative.value
         let vel = velocity + Scalar(time) * derivative.velocity
         let accel = function.acceleration(val, velocity: vel)

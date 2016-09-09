@@ -58,7 +58,7 @@ public struct UnitBezier {
     /// - parameter x: The value to solve for.
     /// - parameter epsilon: The required precision of the result (where `x * epsilon` is the maximum time segment to be evaluated).
     /// - returns: The solved `y` value.
-    public func solve(x: Scalar, epsilon: Scalar) -> Scalar {
+    public func solve(_ x: Scalar, epsilon: Scalar) -> Scalar {
         return UnitBezierSolver(bezier: self).solve(x, eps: epsilon)
     }
 }
@@ -129,19 +129,19 @@ private struct UnitBezierSolver {
         ay = 1.0 - cy - by
     }
     
-    func sampleCurveX(t: Scalar) -> Scalar {
+    func sampleCurveX(_ t: Scalar) -> Scalar {
         return ((ax * t + bx) * t + cx) * t
     }
     
-    func sampleCurveY(t: Scalar) -> Scalar {
+    func sampleCurveY(_ t: Scalar) -> Scalar {
         return ((ay * t + by) * t + cy) * t
     }
     
-    func sampleCurveDerivativeX(t: Scalar) -> Scalar {
+    func sampleCurveDerivativeX(_ t: Scalar) -> Scalar {
         return (3.0 * ax * t + 2.0 * bx) * t + cx
     }
     
-    func solveCurveX(x: Scalar, eps: Scalar) -> Scalar {
+    func solveCurveX(_ x: Scalar, eps: Scalar) -> Scalar {
         var t0: Scalar = 0.0
         var t1: Scalar = 0.0
         var t2: Scalar = 0.0
@@ -190,7 +190,7 @@ private struct UnitBezierSolver {
         return t2
     }
     
-    func solve(x: Scalar, eps: Scalar) -> Scalar {
+    func solve(_ x: Scalar, eps: Scalar) -> Scalar {
         return sampleCurveY(solveCurveX(x, eps: eps))
     }
 }

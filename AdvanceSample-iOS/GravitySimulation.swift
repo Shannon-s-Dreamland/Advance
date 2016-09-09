@@ -31,9 +31,9 @@ import Advance
 
 
 private enum GravitySimulationNode: Advanceable {
-    case Static(Vector2)
+    case `static`(Vector2)
     case Decay(DynamicSolver<DecayFunction<Vector2>>)
-    case Pull(DynamicSolver<GravityFunction>)
+    case pull(DynamicSolver<GravityFunction>)
     
     var value: Vector2 {
         switch self {
@@ -57,7 +57,7 @@ private enum GravitySimulationNode: Advanceable {
         }
     }
     
-    mutating func advance(elapsed: Double) {
+    mutating func advance(_ elapsed: Double) {
         switch self {
         case .Static(_):
             break
@@ -79,7 +79,7 @@ private enum GravitySimulationNode: Advanceable {
         }
     }
     
-    mutating func pullTo(point: CGPoint) {
+    mutating func pullTo(_ point: CGPoint) {
         if case var .Pull(sim) = self {
             sim.function.target = point.vector
             self = .Pull(sim)
@@ -99,7 +99,7 @@ private enum GravitySimulationNode: Advanceable {
         self = .Decay(solver)
     }
     
-    mutating func reset(to: CGPoint) {
+    mutating func reset(_ to: CGPoint) {
         self = .Static(to.vector)
     }
 }
@@ -122,7 +122,7 @@ struct GravitySimulation: Advanceable {
     
     private var nodes: [[GravitySimulationNode]] = []
     
-    mutating func reset(layoutBounds: CGRect) {
+    mutating func reset(_ layoutBounds: CGRect) {
         target = nil
         
         let rowHeight = (layoutBounds.size.height / CGFloat(rows-1))
@@ -156,11 +156,11 @@ struct GravitySimulation: Advanceable {
         }
     }
     
-    func getPosition(row: Int, col: Int) -> CGPoint {
-        return CGPoint(vector: nodes[row][col].value)
+    func getPosition(_ row: Int, col: Int) -> CGPoint {
+        return CGPoint(dictionaryRepresentation: nodes[row][col].value)
     }
     
-    mutating func advance(elapsed: Double) {
+    mutating func advance(_ elapsed: Double) {
         for r in 0..<rows {
             for c in 0..<cols {
                 nodes[r][c].advance(elapsed)

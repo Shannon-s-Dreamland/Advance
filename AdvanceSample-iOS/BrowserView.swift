@@ -46,7 +46,7 @@ class BrowserItem: NSObject {
     
     let view: UIView = {
         let v = UIView(frame: CGRect.zero)
-        v.backgroundColor = UIColor.blueColor()
+        v.backgroundColor = UIColor.blue
         v.layer.cornerRadius = 6.0
         v.clipsToBounds = true
         return v
@@ -61,7 +61,7 @@ class BrowserItem: NSObject {
         f.size = size.value
         f.origin.x -= anchorPoint.x * f.size.width
         f.origin.y -= anchorPoint.y * f.size.height
-        f = CGRectApplyAffineTransform(f, transform.value.affineTransform)
+        f = f.applying(transform.value.affineTransform)
         f.origin.x += center.value.x
         f.origin.y += center.value.y
         return f
@@ -106,12 +106,12 @@ class BrowserItem: NSObject {
         }
     }
     
-    private dynamic func gesture(recognizer: DirectManipulationGestureRecognizer) {
+    private dynamic func gesture(_ recognizer: DirectManipulationGestureRecognizer) {
         switch recognizer.state {
-        case .Began:
+        case .began:
             
-            let gestureLocation = recognizer.locationInView(view)
-            let newCenter = view.superview!.convertPoint(gestureLocation, fromView: view)
+            let gestureLocation = recognizer.location(in: view)
+            let newCenter = view.superview!.convert(gestureLocation, from: view)
             center.reset(newCenter)
             
             var anchorPoint = gestureLocation
@@ -123,7 +123,7 @@ class BrowserItem: NSObject {
             centerWhenGestureBegan = center.value
             transformWhenGestureBegan = transform.value
             transform.reset(transform.value)
-        case .Changed:
+        case .changed:
             var t = transformWhenGestureBegan
             t.rotation += recognizer.rotation
             t.scale *= recognizer.scale
@@ -134,11 +134,11 @@ class BrowserItem: NSObject {
             c.y += recognizer.translationInView(view.superview).y
             center.reset(c)
             break
-        case .Ended, .Cancelled:
+        case .ended, .cancelled:
             
             // Reset the anchor point
             let mid = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
-            let newCenter = view.superview!.convertPoint(mid, fromView: view)
+            let newCenter = view.superview!.convert(mid, from: view)
             center.reset(newCenter)
             anchorPoint = CGPoint(x: 0.5, y: 0.5)
             
@@ -170,22 +170,22 @@ class BrowserItem: NSObject {
         }
     }
     
-    dynamic func pan(recognizer: UIPanGestureRecognizer) {
+    dynamic func pan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
-        case .Began:
+        case .began:
             gestureInProgress = true
             centerWhenGestureBegan = center.value
             center.reset(center.value)
             break
-        case .Changed:
+        case .changed:
             var c = centerWhenGestureBegan
-            c.y += recognizer.translationInView(view.superview).y
+            c.y += recognizer.translation(in: view.superview).y
             center.reset(c)
             break
-        case .Ended:
+        case .ended:
             gestureInProgress = false
             center.velocity.y = recognizer.velocityInView(view.superview).y
-            if abs(recognizer.translationInView(view.superview).y) > 10.0 {
+            if abs(recognizer.translation(in: view.superview).y) > 10.0 {
                 browserView?.leaveFullScreen()
             } else {
                 browserView?.updateAllItems(true)
@@ -197,13 +197,13 @@ class BrowserItem: NSObject {
 }
 
 extension BrowserItem: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == panRecognizer {
             if browserView?.fullScreenItem != self {
                 return false
             }
             
-            let translation = panRecognizer.translationInView(view)
+            let translation = panRecognizer.translation(in: view)
             if abs(translation.x) > abs(translation.y) {
                 return false
             }
@@ -217,11 +217,11 @@ func ==(lhs: BrowserItem, rhs: BrowserItem) -> Bool {
 }
 
 protocol BrowserViewDelegate: class {
-    func browserView(browserView: BrowserView, didShowItem item: BrowserItem)
-    func browserView(browserView: BrowserView, didHideItem item: BrowserItem)
-    func browserView(browserView: BrowserView, didEnterFullScreenForItem item: BrowserItem)
-    func browserView(browserView: BrowserView, didLeaveFullScreenForItem item: BrowserItem)
-    func browserViewDidScroll(browserView: BrowserView)
+    func browserView(_ browserView: BrowserView, didShowItem item: BrowserItem)
+    func browserView(_ browserView: BrowserView, didHideItem item: BrowserItem)
+    func browserView(_ browserView: BrowserView, didEnterFullScreenForItem item: BrowserItem)
+    func browserView(_ browserView: BrowserView, didLeaveFullScreenForItem item: BrowserItem)
+    func browserViewDidScroll(_ browserView: BrowserView)
 }
 
 class BrowserView: UIView {
@@ -324,7 +324,7 @@ class BrowserView: UIView {
         }
         
         // bring centermost item to front
-        var closestDistance = CGFloat.max
+        var closestDistance = CGFloat.greatestFiniteMagnitude
         var closestItem: BrowserItem? = nil
         for item in visibleItems {
             let distance = abs(item.center.value.x - bounds.midX)
@@ -334,7 +334,7 @@ class BrowserView: UIView {
             }
         }
         if let item = closestItem {
-            bringSubviewToFront(item.view)
+            bringSubview(toFront: item.view)
         }
         
         updateAllItems(true)
@@ -349,7 +349,7 @@ class BrowserView: UIView {
             let finalCenter = CGPoint(x: bounds.midX, y: bounds.height * 0.3 * 0.25)
             cv.center = initialCenter.interpolatedTo(finalCenter, alpha: 1.0-Scalar(cvVis))
             
-            let t = CGAffineTransformMakeScale(0.7 + cvVis*0.3, 0.7 + cvVis*0.3)
+            let t = CGAffineTransform(scaleX: 0.7 + cvVis*0.3, y: 0.7 + cvVis*0.3)
             cv.transform = t
             
             cv.URLVisibility = CGFloat(cvVis)
@@ -362,13 +362,13 @@ class BrowserView: UIView {
         coverVisibilty.target = coverVisibility
     }
     
-    private func updateAllItems(animated: Bool) {
+    private func updateAllItems(_ animated: Bool) {
         for i in 0..<items.count {
             updateItemAtIndex(i, animated: animated)
         }
     }
     
-    private func updateItemAtIndex(index: Int, animated: Bool) {
+    private func updateItemAtIndex(_ index: Int, animated: Bool) {
         let item = items[index]
         guard item.gestureInProgress == false else { return }
         
@@ -417,22 +417,22 @@ class BrowserView: UIView {
             }
             
             if shouldBeVisible {
-                updateViewForItemAtIndex(items.indexOf(item)!)
+                updateViewForItemAtIndex(items.index(of: item)!)
             }
         }
         
     }
     
-    private func showItem(item: BrowserItem) {
+    private func showItem(_ item: BrowserItem) {
         assert(item.browserView == self)
         assert(visibleItems.contains(item) == false)
         visibleItems.insert(item)
-        updateViewForItemAtIndex(items.indexOf(item)!)
+        updateViewForItemAtIndex(items.index(of: item)!)
         addSubview(item.view)
         delegate?.browserView(self, didShowItem: item)
     }
 
-    private func updateViewForItemAtIndex(index: Int) {
+    private func updateViewForItemAtIndex(_ index: Int) {
         let item = items[index]
         item.view.bounds = CGRect(origin: CGPoint.zero, size: item.size.value)
         item.view.center = item.center.value
@@ -440,7 +440,7 @@ class BrowserView: UIView {
         item.view.transform = item.transform.value.affineTransform
     }
     
-    private func hideItem(item: BrowserItem) {
+    private func hideItem(_ item: BrowserItem) {
         assert(item.browserView == self)
         assert(visibleItems.contains(item))
         visibleItems.remove(item)
@@ -448,7 +448,7 @@ class BrowserView: UIView {
         delegate?.browserView(self, didHideItem: item)
     }
     
-    func enterFullScreen(item: BrowserItem) {
+    func enterFullScreen(_ item: BrowserItem) {
         assert(item.browserView == self)
         leaveFullScreen()
         fullScreenItem = item
@@ -464,18 +464,18 @@ class BrowserView: UIView {
         delegate?.browserView(self, didLeaveFullScreenForItem: item)
     }
     
-    private dynamic func pan(recognizer: UIPanGestureRecognizer) {
+    private dynamic func pan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
-        case .Began:
+        case .began:
             panInProgress = true
             indexWhenPanBegan = index.value
             index.cancelAnimation()
-        case .Changed:
+        case .changed:
             index.value = indexWhenPanBegan - (recognizer.translationInView(self).x / bounds.width * paginationRatio)
             break
-        case .Ended, .Cancelled:
+        case .ended, .cancelled:
             panInProgress = false
-            let vel = -recognizer.velocityInView(self).x / bounds.width * paginationRatio
+            let vel = -recognizer.velocity(in: self).x / bounds.width * paginationRatio
             var destIndex = round(index.value + (vel/5.0))
             if destIndex == round(index.value) {
                 if vel < 0.0 {
@@ -499,7 +499,7 @@ class BrowserView: UIView {
 }
 
 extension BrowserView: UIGestureRecognizerDelegate {
-    override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == panRecognizer && fullScreenItem != nil {
             return false
         }

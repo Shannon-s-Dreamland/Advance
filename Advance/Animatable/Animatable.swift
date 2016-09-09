@@ -55,7 +55,7 @@ public final class Animatable<Value: VectorConvertible> {
     
     /// `finished` will be true if the animation finished uninterrupted, or 
     /// false if it was cancelled.
-    public typealias Completion = (finished: Bool) -> Void
+  public typealias Completion = (Bool) -> Void
     
     /// Fires each time the `value` property changes.
     public let changed = Event<Value>()
@@ -120,7 +120,7 @@ public final class Animatable<Value: VectorConvertible> {
     ///   animation has completed. Its only argument is a `Boolean`, which will 
     ///   be `true` if the animation completed uninterrupted, or `false` if it
     ///   was removed for any other reason.
-    public func animate<A: ValueAnimationType where A.Value == Value>(animation: A, completion: Completion? = nil) {
+    public func animate<A: ValueAnimationType>(_ animation: A, completion: Completion? = nil) where A.Value == Value {
         
         // Cancel any in-flight animation. We observe the cancelled event of
         // animators that we create in order to clean up, so this will have
@@ -144,12 +144,12 @@ public final class Animatable<Value: VectorConvertible> {
         
         animator?.cancelled.observe({ [unowned self] (a) -> Void in
             self.animator = nil
-            completion?(finished: false)
+            completion?(false)
         })
         
         animator?.finished.observe({ [unowned self] (a) -> Void in
             self.animator = nil
-            completion?(finished: true)
+            completion?(true)
         })
     }
     
