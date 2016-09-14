@@ -48,8 +48,8 @@ class SpringConfigurationView: UIView {
         set { dampingSlider.slider.value = Float(newValue) }
     }
     
-    private let tensionSlider = LabeledSliderView()
-    private let dampingSlider = LabeledSliderView()
+    fileprivate let tensionSlider = LabeledSliderView()
+    fileprivate let dampingSlider = LabeledSliderView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,13 +96,13 @@ class SpringConfigurationView: UIView {
         dampingSlider.frame = CGRect(x: 0.0, y: tensionSlider.frame.maxY, width: bounds.width, height: dampingSize.height)
     }
     
-    private dynamic func changed() {
+    fileprivate dynamic func changed() {
         delegate?.springConfigurationViewDidChange(self)
     }
 }
 
 
-private class LabeledSliderView: UIView {
+fileprivate class LabeledSliderView: UIView {
     
     var labelWidth: CGFloat = 90.0 {
         didSet { setNeedsLayout() }
@@ -121,8 +121,8 @@ private class LabeledSliderView: UIView {
         set { label.text = newValue }
     }
     
-    private let label: UILabel
-    private let slider: UISlider
+    fileprivate let label: UILabel
+    fileprivate let slider: UISlider
     
     override init(frame: CGRect) {
         label = UILabel()
@@ -142,13 +142,13 @@ private class LabeledSliderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private override func sizeThatFits(_ size: CGSize) -> CGSize {
+    fileprivate override func sizeThatFits(_ size: CGSize) -> CGSize {
         var s = size
         s.height = 44.0
         return s
     }
     
-    private override func layoutSubviews() {
+    fileprivate override func layoutSubviews() {
         super.layoutSubviews()
         
         var labelSize = label.sizeThatFits(bounds.size)

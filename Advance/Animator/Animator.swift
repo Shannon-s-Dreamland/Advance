@@ -92,7 +92,7 @@ public enum AnimatorResult {
 /// can occur.
 public final class Animator<A: AnimationType> {
     
-    private lazy var subscription: LoopSubscription? = {
+    fileprivate lazy var subscription: LoopSubscription? = {
         
         let s = Loop.shared.subscribe()
         
@@ -111,7 +111,7 @@ public final class Animator<A: AnimationType> {
     /// The current state of the animator. Animators begin in a running state,
     /// and they are guarenteed to transition into either the cancelled or
     /// finished state exactly one time – no further state changes are allowed.
-    private (set) public var state: AnimatorState = .pending {
+    fileprivate (set) public var state: AnimatorState = .pending {
         willSet {
             guard newValue != state else { return }
             switch newValue {
@@ -146,7 +146,7 @@ public final class Animator<A: AnimationType> {
     }
     
     /// The animation that is being run.
-    private (set) public var animation: A
+    fileprivate (set) public var animation: A
     
     /// Fired when the animator starts running
     public let started = Event<A>()
@@ -233,7 +233,7 @@ public final class Animator<A: AnimationType> {
         subscription = nil
     }
     
-    private func finish() {
+    fileprivate func finish() {
         assert(state == .running || state == .pending || state == .paused)
         state = .completed(.finished)
         subscription = nil

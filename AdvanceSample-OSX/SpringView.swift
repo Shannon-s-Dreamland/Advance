@@ -37,7 +37,7 @@ final class SpringView : NSView {
         super.init(frame: frame)
         wantsLayer = true
         
-        layer?.backgroundColor = NSColor(calibratedRed: 0.0, green: 196.0/255.0, blue: 1.0, alpha: 1.0).CGColor
+        layer?.backgroundColor = NSColor(calibratedRed: 0.0, green: 196.0/255.0, blue: 1.0, alpha: 1.0).cgColor
         layer?.delegate = self
         
         let t = arc4random_uniform(120 - 20) + 20
@@ -49,14 +49,13 @@ final class SpringView : NSView {
         centerSpring.changed.observe { [unowned self] (c) -> Void in
             self.layer?.position = c
         }
+        
+        layer?.cornerRadius = min(bounds.width, bounds.height) / 2.0
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func layoutSublayersOfLayer(layer: CALayer) {
-        layer.cornerRadius = min(bounds.width, bounds.height) / 2.0
-    }
 }
 
+extension SpringView: CALayerDelegate {}

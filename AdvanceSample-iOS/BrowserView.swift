@@ -52,9 +52,9 @@ class BrowserItem: NSObject {
         return v
     }()
     
-    private var transformWhenGestureBegan = SimpleTransform()
-    private var centerWhenGestureBegan = CGPoint.zero
-    private (set) var gestureInProgress = false
+    fileprivate var transformWhenGestureBegan = SimpleTransform()
+    fileprivate var centerWhenGestureBegan = CGPoint.zero
+    fileprivate (set) var gestureInProgress = false
     
     var frame: CGRect {
         var f = CGRect.zero
@@ -67,7 +67,7 @@ class BrowserItem: NSObject {
         return f
     }
     
-    private (set) weak var browserView: BrowserView? = nil
+    fileprivate (set) weak var browserView: BrowserView? = nil
     
     override init() {
         super.init()
@@ -100,13 +100,13 @@ class BrowserItem: NSObject {
         view.addGestureRecognizer(panRecognizer)
     }
     
-    private dynamic func tap() {
+    fileprivate dynamic func tap() {
         if browserView?.fullScreenItem != self {
             browserView?.enterFullScreen(self)
         }
     }
     
-    private dynamic func gesture(_ recognizer: DirectManipulationGestureRecognizer) {
+    fileprivate dynamic func gesture(_ recognizer: DirectManipulationGestureRecognizer) {
         switch recognizer.state {
         case .began:
             
@@ -184,7 +184,7 @@ class BrowserItem: NSObject {
             break
         case .ended:
             gestureInProgress = false
-            center.velocity.y = recognizer.velocityInView(view.superview).y
+            center.velocity.y = recognizer.velocity(in: view.superview).y
             if abs(recognizer.translation(in: view.superview).y) > 10.0 {
                 browserView?.leaveFullScreen()
             } else {
@@ -228,22 +228,22 @@ class BrowserView: UIView {
     
     weak var delegate: BrowserViewDelegate? = nil
     
-    private let paginationRatio: CGFloat = 0.68
+    fileprivate let paginationRatio: CGFloat = 0.68
     
-    private let index = Animatable(value: CGFloat.zero)
+    fileprivate let index = Animatable(value: CGFloat.zero)
     
-    private var panInProgress = false
-    private var indexWhenPanBegan: CGFloat = 0.0
+    fileprivate var panInProgress = false
+    fileprivate var indexWhenPanBegan: CGFloat = 0.0
     
-    private var visibleItems: Set<BrowserItem> = []
+    fileprivate var visibleItems: Set<BrowserItem> = []
     
-    private let panRecognizer = UIPanGestureRecognizer()
+    fileprivate let panRecognizer = UIPanGestureRecognizer()
     
-    private var lastLayoutSize = CGSize.zero
+    fileprivate var lastLayoutSize = CGSize.zero
     
-    private var fullScreenItem: BrowserItem? = nil
+    fileprivate var fullScreenItem: BrowserItem? = nil
     
-    private let coverVisibilty: Spring<CGFloat> = {
+    fileprivate let coverVisibilty: Spring<CGFloat> = {
         let s = Spring(value: CGFloat(1.0))
         s.configuration.threshold = 0.001
         s.configuration.tension = 220.0
@@ -362,13 +362,13 @@ class BrowserView: UIView {
         coverVisibilty.target = coverVisibility
     }
     
-    private func updateAllItems(_ animated: Bool) {
+    fileprivate func updateAllItems(_ animated: Bool) {
         for i in 0..<items.count {
             updateItemAtIndex(i, animated: animated)
         }
     }
     
-    private func updateItemAtIndex(_ index: Int, animated: Bool) {
+    fileprivate func updateItemAtIndex(_ index: Int, animated: Bool) {
         let item = items[index]
         guard item.gestureInProgress == false else { return }
         
@@ -405,7 +405,7 @@ class BrowserView: UIView {
         }
     }
 
-    private func updateVisibleItems() {
+    fileprivate func updateVisibleItems() {
         
         for item in items {
             let isVisible = visibleItems.contains(item)
@@ -423,7 +423,7 @@ class BrowserView: UIView {
         
     }
     
-    private func showItem(_ item: BrowserItem) {
+    fileprivate func showItem(_ item: BrowserItem) {
         assert(item.browserView == self)
         assert(visibleItems.contains(item) == false)
         visibleItems.insert(item)
@@ -432,7 +432,7 @@ class BrowserView: UIView {
         delegate?.browserView(self, didShowItem: item)
     }
 
-    private func updateViewForItemAtIndex(_ index: Int) {
+    fileprivate func updateViewForItemAtIndex(_ index: Int) {
         let item = items[index]
         item.view.bounds = CGRect(origin: CGPoint.zero, size: item.size.value)
         item.view.center = item.center.value
@@ -440,7 +440,7 @@ class BrowserView: UIView {
         item.view.transform = item.transform.value.affineTransform
     }
     
-    private func hideItem(_ item: BrowserItem) {
+    fileprivate func hideItem(_ item: BrowserItem) {
         assert(item.browserView == self)
         assert(visibleItems.contains(item))
         visibleItems.remove(item)
@@ -453,7 +453,7 @@ class BrowserView: UIView {
         leaveFullScreen()
         fullScreenItem = item
         updateAllItems(true)
-        index.animateTo(CGFloat(items.indexOf(item)! + 1))
+        index.animateTo(CGFloat(items.index(of: item)! + 1))
         delegate?.browserView(self, didEnterFullScreenForItem: item)
     }
     
@@ -464,14 +464,14 @@ class BrowserView: UIView {
         delegate?.browserView(self, didLeaveFullScreenForItem: item)
     }
     
-    private dynamic func pan(_ recognizer: UIPanGestureRecognizer) {
+    fileprivate dynamic func pan(_ recognizer: UIPanGestureRecognizer) {
         switch recognizer.state {
         case .began:
             panInProgress = true
             indexWhenPanBegan = index.value
             index.cancelAnimation()
         case .changed:
-            index.value = indexWhenPanBegan - (recognizer.translationInView(self).x / bounds.width * paginationRatio)
+            index.value = indexWhenPanBegan - (recognizer.translation(in: self).x / bounds.width * paginationRatio)
             break
         case .ended, .cancelled:
             panInProgress = false

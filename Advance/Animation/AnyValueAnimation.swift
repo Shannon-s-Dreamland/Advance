@@ -42,7 +42,7 @@ public struct AnyValueAnimation<Value: VectorConvertible>: ValueAnimationType {
     public let finished: Bool
     
     // Captures the underlying animation and allows us to advance it.
-    private let advanceFunction: (Double) -> AnyValueAnimation<Value>
+    fileprivate let advanceFunction: (Double) -> AnyValueAnimation<Value>
     
     /// Creates a new type-erased animation.
     ///

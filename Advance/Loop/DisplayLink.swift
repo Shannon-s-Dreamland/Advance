@@ -124,8 +124,8 @@ internal final class DisplayLink {
     }
     
     /// The CVDisplayLink that powers this DisplayLink instance.
-    var displayLink: CVDisplayLinkRef = {
-        var dl: CVDisplayLinkRef? = nil
+    var displayLink: CVDisplayLink = {
+        var dl: CVDisplayLink? = nil
         CVDisplayLinkCreateWithActiveCGDisplays(&dl)
         return dl!
     }()
@@ -134,23 +134,23 @@ internal final class DisplayLink {
     
     /// Creates a new paused DisplayLink instance.
     init() {
-        func displayLinkOutputCallback(displayLink: CVDisplayLink, inNow: UnsafePointer<CVTimeStamp>, inOutputTime: UnsafePointer<CVTimeStamp>, flagsIn: CVOptionFlags, flagsOut: UnsafeMutablePointer<CVOptionFlags>, userInfo: UnsafeMutablePointer<Void>) -> CVReturn {
-            let timestamp = Double(inNow.memory.videoTime) / Double(inNow.memory.videoTimeScale) // convert to seconds
-            let dl = unsafeBitCast(userInfo, DisplayLink.self) // cast back to a pointer to self
+        func displayLinkOutputCallback(displayLink: CVDisplayLink, inNow: UnsafePointer<CVTimeStamp>, inOutputTime: UnsafePointer<CVTimeStamp>, flagsIn: CVOptionFlags, flagsOut: UnsafeMutablePointer<CVOptionFlags>, userInfo: UnsafeMutableRawPointer?) -> CVReturn {
+            let timestamp = Double(inNow.pointee.videoTime) / Double(inNow.pointee.videoTimeScale) // convert to seconds
+            let dl = unsafeBitCast(userInfo, to: DisplayLink.self) // cast back to a pointer to self
             
             let time = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(displayLink)
             let duration = Double(Double(time.timeValue) / Double(time.timeScale)) // convert to seconds
             let info = Frame(timestamp: timestamp, duration: duration)
             
             // dispatch to main - this is called from an internal CV thread
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.async { () -> Void in
                 dl.frame(info) // call frame(timestamp:) on self
             }
             return kCVReturnSuccess
         }
         
         // hook up the frame output callback
-        CVDisplayLinkSetOutputCallback(self.displayLink, displayLinkOutputCallback, UnsafeMutablePointer<Void>(unsafeAddressOf(self))) // pass in self as the 'userInfo'
+        CVDisplayLinkSetOutputCallback(self.displayLink, displayLinkOutputCallback, UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())) // pass in self as the 'userInfo'
     }
     
     deinit {
@@ -158,10 +158,10 @@ internal final class DisplayLink {
     }
     
     /// Called for each CVDisplayLink frame callback.
-    func frame(frame: Frame) {
+    func frame(_ frame: Frame) {
         guard paused == false else { return }
         guard frame.timestamp != lastFrame.timestamp else { return }
-        callback?(frame: frame)
+        callback?(frame)
         lastFrame = frame
     }
 }

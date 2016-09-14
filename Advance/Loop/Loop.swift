@@ -36,9 +36,9 @@ public final class Loop {
     /// The default loop.
     public static let shared = Loop()
     
-    private var currentAnimationTime: Double = 0.0
+    fileprivate var currentAnimationTime: Double = 0.0
     
-    private lazy var displayLink: DisplayLink = {
+    fileprivate lazy var displayLink: DisplayLink = {
         let link = DisplayLink()
         link.callback = { [unowned self] (frame) in
             self.displayLinkDidFire(frame)
@@ -46,14 +46,14 @@ public final class Loop {
         return link
     }()
     
-    private var tokens: Set<LoopSubscription.Token> = []
+    fileprivate var tokens: Set<LoopSubscription.Token> = []
     
     /// All currently active subscriptions.
     public var subscriptions: [LoopSubscription] {
         return tokens.filter({$0.subscription != nil}).map({ $0.subscription! })
     }
     
-    private init() {
+    fileprivate init() {
 
     }
     
@@ -76,20 +76,20 @@ public final class Loop {
         stopIfPossible()
     }
     
-    private func startIfNeeded() {
+    fileprivate func startIfNeeded() {
         guard tokens.count > 0 else { return }
         guard displayLink.paused == true else { return }
         displayLink.paused = false
         currentAnimationTime = 0
     }
     
-    private func stopIfPossible() {
+    fileprivate func stopIfPossible() {
         guard tokens.count == 0 else { return }
         guard displayLink.paused == false else { return }
         displayLink.paused = true
     }
     
-    private func displayLinkDidFire(_ frame: DisplayLink.Frame) {
+    fileprivate func displayLinkDidFire(_ frame: DisplayLink.Frame) {
         
         let timestamp = max(frame.timestamp, currentAnimationTime)
         

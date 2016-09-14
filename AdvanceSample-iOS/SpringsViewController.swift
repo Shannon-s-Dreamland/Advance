@@ -86,7 +86,7 @@ class SpringsViewController: DemoViewController {
         springView.centerSpring.reset(CGPoint(x: view.bounds.midX, y: view.bounds.midY))
     }
     
-    private func updateSprings() {
+    fileprivate func updateSprings() {
         springView.centerSpring.configuration.tension = Scalar(configView.tension)
         springView.centerSpring.configuration.damping = Scalar(configView.damping)
     }

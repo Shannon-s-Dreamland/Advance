@@ -61,12 +61,12 @@ public final class Animatable<Value: VectorConvertible> {
     public let changed = Event<Value>()
     
     // The animator that is driving the current animation, if any.
-    private var animator: Animator<AnyValueAnimation<Value>>? = nil
+    fileprivate var animator: Animator<AnyValueAnimation<Value>>? = nil
     
     // Tracks the last publicly notified value – this lets us control when
     // events are fired (we always want to wait until the end of the
     // animation loop).
-    private var currentValue: Value {
+    fileprivate var currentValue: Value {
         didSet {
             guard currentValue != oldValue else { return }
             changed.fire(value)

@@ -50,7 +50,7 @@ public struct DynamicSolver<F: DynamicFunctionType> : Advanceable {
     // rate). The math required to solve most functions is easy for modern
     // CPUs, but it's worth experimenting with this value if solver calculations
     // ever become a performance bottleneck.
-    private let tickTime: Double = 0.008
+    fileprivate let tickTime: Double = 0.008
     
     /// The function driving the simulation.
     public var function: F {
@@ -63,18 +63,18 @@ public struct DynamicSolver<F: DynamicFunctionType> : Advanceable {
     }
     
     // Tracks the delta between external and internal time.
-    private var timeAccumulator: Double = 0.0
+    fileprivate var timeAccumulator: Double = 0.0
     
     /// Returns `true` if the solver has settled and does not currently
     /// need to be advanced on each frame.
-    private (set) public var settled: Bool = false
+    fileprivate (set) public var settled: Bool = false
     
     // The current state of the solver.
-    private var simulationState: DynamicSolverState<F.Vector>
+    fileprivate var simulationState: DynamicSolverState<F.Vector>
     
     // The latest interpolated state that we use to return values to the outside
     // world.
-    private var interpolatedState: DynamicSolverState<F.Vector>
+    fileprivate var interpolatedState: DynamicSolverState<F.Vector>
     
     /// Creates a new `DynamicSolver` instance.
     ///
@@ -88,7 +88,7 @@ public struct DynamicSolver<F: DynamicFunctionType> : Advanceable {
         settleIfPossible()
     }
     
-    private mutating func settleIfPossible() {
+    fileprivate mutating func settleIfPossible() {
         guard settled == false else { return }
         if function.canSettle(simulationState.value, velocity: simulationState.velocity) {
             simulationState.value = function.settledValue(simulationState.value, velocity: simulationState.velocity)

@@ -32,17 +32,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 public struct BasicAnimation<Value: VectorConvertible>: ValueAnimationType {
     
     /// The initial value at time 0.
-    private (set) public var from: Value
+    fileprivate (set) public var from: Value
     
     /// The final value when the animation is finished.
-    private (set) public var to: Value
+    fileprivate (set) public var to: Value
     
     /// The duration of the animation in seconds.
-    private (set) public var duration: Double
+    fileprivate (set) public var duration: Double
     
     /// The timing function that is used to map elapsed time to an
     /// interpolated value.
-    private (set) public var timingFunction: TimingFunctionType
+    fileprivate (set) public var timingFunction: TimingFunctionType
     
     /// Creates a new `BasicAnimation` instance.
     ///
@@ -60,12 +60,12 @@ public struct BasicAnimation<Value: VectorConvertible>: ValueAnimationType {
     }
     
     /// The current value.
-    private(set) public var value: Value
+    fileprivate(set) public var value: Value
     
     /// The current velocity.
-    private(set) public var velocity: Value
+    fileprivate(set) public var velocity: Value
     
-    private var elapsed: Double = 0.0
+    fileprivate var elapsed: Double = 0.0
     
     /// Returns `true` if the advanced time is `>=` duration.
     public var finished: Bool {

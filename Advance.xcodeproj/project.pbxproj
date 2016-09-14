@@ -970,11 +970,16 @@
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Storehouse Media Inc";
 				TargetAttributes = {
+					228E20401C9CB99D0058ADA1 = {
+						LastSwiftMigration = 0800;
+					};
 					228E206D1C9CB9B00058ADA1 = {
+						LastSwiftMigration = 0800;
 						TestTargetID = 228E20851C9CBA490058ADA1;
 					};
 					228E20851C9CBA490058ADA1 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 					22F74AA41C7674BB004C6E4C = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -991,12 +996,15 @@
 					};
 					5D3A2F301C9209EE0071F08F = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 					};
 					5D3A2F671C92559B0071F08F = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 					};
 					5DE959EF1C9392E1008487A8 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 5D3A2F671C92559B0071F08F;
 					};
 				};
@@ -1405,6 +1413,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
@@ -1429,6 +1438,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
@@ -1443,6 +1453,7 @@
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-tvOS.app/AdvanceSample-tvOS";
 			};
 			name = Debug;
@@ -1457,6 +1468,7 @@
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-tvOS.app/AdvanceSample-tvOS";
 			};
 			name = Release;
@@ -1473,6 +1485,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
@@ -1490,6 +1503,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
@@ -1714,6 +1728,7 @@
 				PRODUCT_NAME = Advance;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1736,6 +1751,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1752,6 +1768,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1768,6 +1785,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1858,6 +1876,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Distribution;
@@ -1881,6 +1900,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Distribution;
 		};
@@ -1908,6 +1928,7 @@
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-tvOS.app/AdvanceSample-tvOS";
 			};
 			name = Distribution;
@@ -1923,6 +1944,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceTests-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-OSX.app/Contents/MacOS/AdvanceSample-OSX";
 			};
 			name = Distribution;
@@ -1956,6 +1978,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Distribution;
 		};
@@ -1971,6 +1994,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceSample-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
@@ -1987,6 +2011,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceTests-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-OSX.app/Contents/MacOS/AdvanceSample-OSX";
 			};
 			name = Debug;
@@ -2002,6 +2027,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.storehouse.AdvanceTests-OSX";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AdvanceSample-OSX.app/Contents/MacOS/AdvanceSample-OSX";
 			};
 			name = Release;

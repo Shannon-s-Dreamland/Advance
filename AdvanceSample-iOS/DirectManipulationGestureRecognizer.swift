@@ -73,14 +73,14 @@ public final class DirectManipulationGestureRecognizer: UIGestureRecognizer {
         while touches.count > 0 {
             let t = touches.removeFirst()
             if firstTouchPointer == nil {
-                firstTouchPointer = Unmanaged.passUnretained(t).toOpaque()
+                firstTouchPointer = UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque())
                 let state = TouchState(t: t)
                 preliminaryState.firstTouchState = state
                 initialState.firstTouchState = state
                 previousState.firstTouchState = state
                 currentState.firstTouchState = state
             } else if secondTouchPointer == nil {
-                secondTouchPointer = Unmanaged.passUnretained(t).toOpaque()
+                secondTouchPointer = UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque())
                 let state = TouchState(t: t)
                 preliminaryState.secondTouchState = state
                 initialState.secondTouchState = state
@@ -103,11 +103,11 @@ public final class DirectManipulationGestureRecognizer: UIGestureRecognizer {
         previousState = currentState
         
         for t in touches {
-            if Unmanaged.passUnretained(t).toOpaque() == firstTouchPointer {
+            if UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == firstTouchPointer {
                 currentState.firstTouchState = TouchState(t: t)
             }
             
-            if Unmanaged.passUnretained(t).toOpaque() == secondTouchPointer {
+            if UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == secondTouchPointer {
                 currentState.secondTouchState = TouchState(t: t)
             }
         }
@@ -183,7 +183,7 @@ public final class DirectManipulationGestureRecognizer: UIGestureRecognizer {
         
         
         for t in touches {
-            if Unmanaged.passUnretained(t).toOpaque() == firstTouchPointer || Unmanaged.passUnretained(t).toOpaque() == secondTouchPointer {
+            if UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == firstTouchPointer || UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == secondTouchPointer {
                 if state == .possible {
                     state = .failed
                 } else if state == .began || state == .changed {
@@ -198,7 +198,7 @@ public final class DirectManipulationGestureRecognizer: UIGestureRecognizer {
         super.touchesEnded(touches, with: event)
         
         for t in touches {
-            if Unmanaged.passUnretained(t).toOpaque() == firstTouchPointer || Unmanaged.passUnretained(t).toOpaque() == secondTouchPointer {
+            if UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == firstTouchPointer || UnsafeRawPointer(Unmanaged.passUnretained(t).toOpaque()) == secondTouchPointer {
                 if state == .possible {
                     state = .failed
                 } else if state == .began || state == .changed {

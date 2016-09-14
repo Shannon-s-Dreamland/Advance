@@ -105,13 +105,13 @@ public func ==(lhs: UnitBezier, rhs: UnitBezier) -> Bool {
 
 private struct UnitBezierSolver {
     
-    private let ax: Scalar
-    private let bx: Scalar
-    private let cx: Scalar
+    fileprivate let ax: Scalar
+    fileprivate let bx: Scalar
+    fileprivate let cx: Scalar
     
-    private let ay: Scalar
-    private let by: Scalar
-    private let cy: Scalar
+    fileprivate let ay: Scalar
+    fileprivate let by: Scalar
+    fileprivate let cy: Scalar
     
     init(bezier: UnitBezier) {
         self.init(p1x: bezier.p1x, p1y: bezier.p1y, p2x: bezier.p2x, p2y: bezier.p2y)

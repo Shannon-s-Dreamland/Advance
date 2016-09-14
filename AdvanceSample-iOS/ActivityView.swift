@@ -163,7 +163,7 @@ public final class ActivityView: UIView {
             let sl = segmentLayers[i]
             let visibility = visibilitySprings[i].value
             sl.frame = bounds
-            sl.path = s.path(bounds.size, visibility: visibility).CGPath
+            sl.path = s.path(bounds.size, visibility: visibility).cgPath
             sl.opacity = Float(visibility)
         }
     }

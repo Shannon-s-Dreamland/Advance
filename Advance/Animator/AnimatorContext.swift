@@ -34,7 +34,7 @@ public final class AnimatorContext {
     /// The default context.
     public static let shared = AnimatorContext()
     
-    private var animators: Set<AnimatorWrapper> = []
+    fileprivate var animators: Set<AnimatorWrapper> = []
     
     /// Creates a new animator context.
     public init() {}
@@ -73,10 +73,10 @@ extension Animator: AnimatorType {}
 
 private struct AnimatorWrapper: Hashable {
     var animator: AnimatorType
-    let uuid: NSUUID
+    let uuid: UUID
     init<A: AnimationType>(animator: Animator<A>) {
         self.animator = animator
-        uuid = NSUUID()
+        uuid = UUID()
     }
     
     var hashValue: Int {

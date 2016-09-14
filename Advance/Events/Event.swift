@@ -40,13 +40,13 @@ public enum EventState<T> {
 public final class Event<T> {
     
     /// The current state of the event.
-    private (set) public var state = EventState<T>.active
+    fileprivate (set) public var state = EventState<T>.active
     
     public typealias PayloadType = T
     public typealias Observer = (PayloadType) -> Void
     
-    private var observers: [Observer] = []
-    private var keyedObservers: [String:Observer] = [:]
+    fileprivate var observers: [Observer] = []
+    fileprivate var keyedObservers: [String:Observer] = [:]
     
     /// Returns `true` if the event state is `Closed`.
     public var closed: Bool {
@@ -57,7 +57,7 @@ public final class Event<T> {
         }
     }
     
-    private var closedValue: T? {
+    fileprivate var closedValue: T? {
         if case let .closed(v) = state {
             return v
         }
@@ -89,7 +89,7 @@ public final class Event<T> {
         deliver(payload)
     }
     
-    private func deliver(_ payload: T) {
+    fileprivate func deliver(_ payload: T) {
         for o in observers {
             o(payload)
         }

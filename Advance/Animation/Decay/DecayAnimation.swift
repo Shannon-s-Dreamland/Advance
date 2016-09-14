@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /// internally.
 public struct DecayAnimation<Value: VectorConvertible>: ValueAnimationType {
     
-    private var solver: DynamicSolver<DecayFunction<Value.Vector>>
+    fileprivate var solver: DynamicSolver<DecayFunction<Value.Vector>>
     
     /// Creates a new `DecayAnimation` instance.
     ///
